@@ -1,9 +1,10 @@
 import { FC } from 'react';
+import Calendar from './components/Calendar';
 
 const App: FC = () => {
   return (
     <>
-      <h1 className='title'>Task Calendar</h1>
+      <Calendar />
     </>
   );
 };
