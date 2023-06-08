@@ -3,7 +3,7 @@ import { FC } from 'react';
 const App: FC = () => {
   return (
     <>
-      <h1>Task Calendar</h1>
+      <h1 className='title'>Task Calendar</h1>
     </>
   );
 };
