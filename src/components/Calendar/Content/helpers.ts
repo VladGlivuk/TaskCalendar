@@ -2,30 +2,28 @@
 import { getMonthFromNumber } from 'core/functions';
 //types
 import { CalendarDay } from 'core/types';
+//constants
+import { maxDaysInMonth } from 'core/constants';
 
 export const getDaysInCurrentMonth = (month: number) => {
-  const maxDaysInMonth = 31;
   const currentDate = new Date();
-  const currentDay = currentDate.getDay();
-
-  const isSundayFirstDay = currentDay === 0;
   const currentYear = currentDate.getFullYear();
+
+  const currentMonthDays = getCurrentMonthDays();
+
+  const firstWeekDay = currentMonthDays[0].getDay();
+  const isSundayFirstDay = firstWeekDay === 0;
 
   const previousMonthDays: Array<Date> = [];
 
   if (!isSundayFirstDay) {
-    const addArr = new Array(currentDay - 1)
+    const addArr = new Array(firstWeekDay)
       .fill('')
       .map((_date, i) => new Date(currentYear, month - 1, 0 - i))
       .reverse();
 
     previousMonthDays.push(...addArr);
   }
-
-  const currentMonthDays = new Array(maxDaysInMonth)
-    .fill('')
-    .map((_date, i) => new Date(currentYear, month - 1, i + 1))
-    .filter((date) => date.getMonth() === month - 1);
 
   const nextMonthsDays: Array<Date> = [];
 
@@ -39,6 +37,13 @@ export const getDaysInCurrentMonth = (month: number) => {
 
   const result = [...previousMonthDays, ...currentMonthDays, ...nextMonthsDays];
   return result;
+
+  function getCurrentMonthDays() {
+    return new Array(maxDaysInMonth)
+      .fill('')
+      .map((_date, i) => new Date(currentYear, month - 1, i + 1))
+      .filter((date) => date.getMonth() === month - 1);
+  }
 };
 
 export const getCalendarCellValue = (day: Date): CalendarDay => {
