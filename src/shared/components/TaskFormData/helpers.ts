@@ -2,7 +2,9 @@
 import { Task } from 'core/types';
 
 export const getNewTaskValue = (task: Task, isEditing: boolean): Task =>
-  isEditing || !!task.taskId ? task : { ...task, taskId: task.label + new Date().getSeconds() + task.date?.getSeconds() };
+  isEditing || !!task.taskId
+    ? task
+    : { ...task, taskId: task.label + task.date?.getSeconds() + +task.colors.toString() + task.dayId + new Date().getSeconds() };
 
 export const getIsFormValid = (task: Task): boolean => task.label.trim().length > 2;
 

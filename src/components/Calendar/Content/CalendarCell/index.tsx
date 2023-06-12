@@ -21,7 +21,8 @@ type CalendarCellProps = {
   addTaskHandler: (newTask: Task, dayId: string) => void;
   deleteTaskHandler: (taskId: string, dayId: string) => void;
   editTaskHandler: (newTask: Task, dayId: string) => void;
-  handleUpdateCalendar: (taskId: string, calendarDayId: string) => void;
+  handleDragAndDropUpdate: (taskId: string, calendarDayId: string) => void;
+  handleSwipeTasksUpdate: (taskId: string, swapTaskId: string, calendarDayId: string) => void;
   handleDragging: (dragging: boolean) => void;
 };
 
@@ -31,7 +32,8 @@ const CalendarCell: FC<CalendarCellProps> = ({
   addTaskHandler,
   deleteTaskHandler,
   editTaskHandler,
-  handleUpdateCalendar,
+  handleDragAndDropUpdate,
+  handleSwipeTasksUpdate,
   handleDragging,
 }) => {
   const { month, monthDay, tasks } = calendarDay;
@@ -50,23 +52,23 @@ const CalendarCell: FC<CalendarCellProps> = ({
 
   const allTaskContextValue: CalendarCellContextType = {
     calendarDay,
+    isDragging,
     deleteTaskHandler,
     editTaskHandler,
     addTaskHandler,
     setIsAddTaskFormOpen,
     handleDragging,
+    handleDragAndDropUpdate,
+    handleSwipeTasksUpdate
   };
 
   const openAddTaskFormModalHandler = () => setIsAddTaskFormOpen(true);
 
-  const onCalendarCellDragOverHandler = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
+  const onCalendarCellDragOverHandler = (event: DragEvent<HTMLDivElement>) => event.preventDefault();
 
   const onCalendarCellDropHandler = (event: DragEvent<HTMLDivElement>) => {
     const id = event.dataTransfer.getData('id');
-    console.log('file: index.tsx:68  id:', id);
-    handleUpdateCalendar(id, calendarDay.id);
+    handleDragAndDropUpdate(id, calendarDay.id);
     handleDragging(false);
   };
 

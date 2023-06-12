@@ -11,6 +11,7 @@ import EditTaskModal from './EditTaskModal';
 import AllColors from './AllColors';
 //styles
 import { ButtonEdit, DeleteButton } from 'shared/styles';
+import { TaskWrapper } from './styles';
 
 type TaskItemProps = {
   task: Task;
@@ -20,10 +21,12 @@ const TaskItem: FC<TaskItemProps> = ({ task, task: { label, colors, taskId } }) 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+
   const openDeleteTaskModalClickHandler = () => setIsDeleteModalOpen(true);
   const openEditTaskModalClickHandler = () => setIsEditModalOpen(true);
 
-  const { handleDragging } = useContext(CalendarCellContext);
+  const { isDragging, calendarDay, handleDragging, handleSwipeTasksUpdate } = useContext(CalendarCellContext);
 
   const buttonWrapperStyles = css`
     display: flex;
@@ -39,28 +42,33 @@ const TaskItem: FC<TaskItemProps> = ({ task, task: { label, colors, taskId } }) 
     z-index: 1;
   `;
 
-  const handleDragEnd = () => handleDragging(false);
+  const handleDragEnd = () => {
+    handleDragging(false);
+    setDraggingId(null);
+  };
 
   const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
     event.dataTransfer.setData('id', `${task.taskId}`);
     handleDragging(true);
-    console.log('file: index.tsx:43  task:', task);
+    setDraggingId(task.taskId);
+  };
+
+  const onTaskDragOverHandler = (event: DragEvent<HTMLDivElement>) => event.preventDefault();
+
+  const onTaskDropHandler = (event: DragEvent<HTMLDivElement>) => {
+    const id = event.dataTransfer.getData('id');
+    handleSwipeTasksUpdate(id, task.taskId, calendarDay.id);
+    handleDragging(false);
   };
 
   return (
-    <div
+    <TaskWrapper
       onDragStart={handleDragStart}
+      onDragOver={onTaskDragOverHandler}
       onDragEnd={handleDragEnd}
+      onDrop={onTaskDropHandler}
       draggable
-      className={css`
-        background: #fff;
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        row-gap: 4px;
-        padding: 4px;
-        cursor: grab;
-      `}
+      isDragging={isDragging && draggingId === taskId}
     >
       <AllColors colors={colors} />
       <span
@@ -84,7 +92,7 @@ const TaskItem: FC<TaskItemProps> = ({ task, task: { label, colors, taskId } }) 
 
       {isDeleteModalOpen && <DeleteModal taskId={taskId} setIsDeleteModalOpen={setIsDeleteModalOpen} />}
       {isEditModalOpen && <EditTaskModal task={task} setIsEditModalOpen={setIsEditModalOpen} />}
-    </div>
+    </TaskWrapper>
   );
 };
 

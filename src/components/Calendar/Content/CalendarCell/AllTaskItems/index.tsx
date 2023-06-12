@@ -21,7 +21,7 @@ const AllTaskItems: FC<AllTaskItemsProps> = ({ allTasks }) => {
       `}
     >
       {allTasks.map((task) => (
-        <TaskItem task={task} key={task.taskId} />
+        <TaskItem task={task} key={task?.taskId} />
       ))}
     </div>
   );

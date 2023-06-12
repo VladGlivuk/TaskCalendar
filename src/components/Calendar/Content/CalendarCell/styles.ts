@@ -9,11 +9,13 @@ export const Cell = styled.div<CellProps>`
   height: 300px;
   background-color: #e2e6e9;
   position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   ${(props) =>
     props?.isDragging === true &&
     `
       border: 0.5px solid black;
+      opacity: .8;
     `}
 `;
 
