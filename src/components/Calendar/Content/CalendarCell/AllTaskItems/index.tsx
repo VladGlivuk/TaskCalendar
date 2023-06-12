@@ -1,8 +1,12 @@
-import { FC } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 //emotion
 import { css } from '@emotion/css';
+//context
+import { FilterContext } from 'components/Calendar/FilterContext';
 //types
 import { Task } from 'core/types';
+//helpers
+import { getNewFilteredTasks } from './helpers';
 //components
 import TaskItem from './TaskItem';
 
@@ -11,6 +15,15 @@ type AllTaskItemsProps = {
 };
 
 const AllTaskItems: FC<AllTaskItemsProps> = ({ allTasks }) => {
+  const [filteredTasks, setFilteredTasks] = useState(allTasks);
+
+  const { debouncedFilterValue, filterOption } = useContext(FilterContext);
+
+  useEffect(() => {
+    const newFilteredTasks = getNewFilteredTasks(allTasks, filterOption, debouncedFilterValue);
+    setFilteredTasks(newFilteredTasks);
+  }, [debouncedFilterValue, filterOption, allTasks]);
+
   return (
     <div
       className={css`
@@ -20,7 +33,7 @@ const AllTaskItems: FC<AllTaskItemsProps> = ({ allTasks }) => {
         row-gap: 8px;
       `}
     >
-      {allTasks.map((task) => (
+      {filteredTasks.map((task) => (
         <TaskItem task={task} key={task?.taskId} />
       ))}
     </div>
