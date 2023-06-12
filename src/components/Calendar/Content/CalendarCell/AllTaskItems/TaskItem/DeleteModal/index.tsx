@@ -14,11 +14,18 @@ type DeleteModalProps = {
 };
 
 const DeleteModal: FC<DeleteModalProps> = ({ setIsDeleteModalOpen, taskId }) => {
-  const { deleteTaskHandler } = useContext(CalendarCellContext);
+  const {
+    deleteTaskHandler,
+    calendarDay: { id },
+  } = useContext(CalendarCellContext);
 
   const closeModalClickHandler = () => setIsDeleteModalOpen(false);
 
-  const deleteClickHandler = () => deleteTaskHandler(taskId);
+  const deleteClickHandler = () => {
+    deleteTaskHandler(taskId, id);
+    console.log('file: index.tsx:27  id:', id);
+    console.log('file: index.tsx:27  taskId:', taskId);
+  };
 
   return (
     <Modal title={' Are you sure you want to delete the item?'} closeModalClickHandler={closeModalClickHandler}>
@@ -37,8 +44,12 @@ const DeleteModal: FC<DeleteModalProps> = ({ setIsDeleteModalOpen, taskId }) => 
             align-items: center;
           `}
         >
-          <DeleteButton title='Delete' onClick={deleteClickHandler} >Delete</DeleteButton>
-          <ButtonClose title='Cancel' onClick={closeModalClickHandler} >Close</ButtonClose>
+          <DeleteButton title='Delete' onClick={deleteClickHandler}>
+            Delete
+          </DeleteButton>
+          <ButtonClose title='Cancel' onClick={closeModalClickHandler}>
+            Close
+          </ButtonClose>
         </div>
       </div>
     </Modal>

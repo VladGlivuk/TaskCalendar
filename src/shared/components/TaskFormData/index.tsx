@@ -6,7 +6,7 @@ import { Task } from 'core/types';
 //constants
 import { possibleTaskColors } from 'core/constants';
 //helpers
-import { getIsFormValid, getNewTaskValue } from './helpers';
+import { getIsFormValid, getNewFilteredTaskValue, getNewTaskValue, getTaskWithNewColor, getTaskWithNewLabel } from './helpers';
 //components
 import Input from '../Input';
 import MultiSelect from '../Multiselect';
@@ -23,11 +23,11 @@ type TaskFormDataProps = {
 const TaskFormData: FC<TaskFormDataProps> = ({ task, submitHandler, closeModalClickHandler, isEditing = false }) => {
   const [newTaskValue, setNewTaskValue] = useState<Task>(task);
 
-  const onChangeLabelValue = (newLabelValue: string) => setNewTaskValue((task) => ({ ...task, label: newLabelValue }));
+  const onChangeLabelValue = (newLabelValue: string) => setNewTaskValue((task) => getTaskWithNewLabel(task, newLabelValue));
 
-  const onChangeColorValue = (newColorValue: string) => setNewTaskValue((task) => ({ ...task, colors: [...task.colors, newColorValue] }));
+  const onChangeColorValue = (newColorValue: string) => setNewTaskValue((task) => getTaskWithNewColor(task, newColorValue));
 
-  const onDeleteColorValue = (deleteValue: string) => setNewTaskValue((task) => ({ ...task, colors: task.colors.filter((color) => color !== deleteValue) }));
+  const onDeleteColorValue = (deleteValue: string) => setNewTaskValue((task) => getNewFilteredTaskValue(task, deleteValue));
 
   const submitClickHandler = () => {
     const newTask = getNewTaskValue(newTaskValue, isEditing);

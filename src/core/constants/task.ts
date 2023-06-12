@@ -1,9 +1,12 @@
 //types
 import { Task } from 'core/types';
 
+export const maxTasksInDay = 3;
+
 export const defaultTaskValue: Task = {
   date: null,
-  label: '',
-  colors: [],
-  id: '',
+  label: 'New task',
+  colors: ['yellow', 'blue'],
+  taskId: '',
+  dayId: '',
 };

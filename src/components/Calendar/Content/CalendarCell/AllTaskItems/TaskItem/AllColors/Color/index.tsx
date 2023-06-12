@@ -1,4 +1,5 @@
 import { FC } from 'react';
+//emotion
 import { css } from '@emotion/css';
 
 type ColorProps = {

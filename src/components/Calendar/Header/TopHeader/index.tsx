@@ -8,9 +8,11 @@ const TopHeader: FC = () => {
   const currentMonth = getMonthFromNumber(currentDate.getMonth());
   const currentYear = currentDate.getFullYear();
 
+  const currentDateInfo = `${currentMonth} ${currentYear}`;
+
   return (
     <div>
-      <h1 className='title'>{`${currentMonth} ${currentYear}`}</h1>
+      <h1 className='title'>{currentDateInfo}</h1>
     </div>
   );
 };

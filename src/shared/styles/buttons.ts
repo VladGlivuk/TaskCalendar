@@ -11,6 +11,9 @@ export const ButtonClose = styled.button`
   color: #2c3e50;
   background: #F9;
   transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     box-shadow: none;
@@ -30,6 +33,9 @@ export const DeleteButton = styled.button`
   color: #fff;
   background: #ff3e4e;
   transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
@@ -49,6 +55,9 @@ export const SubmitButton = styled.button`
   color: #fff;
   background: #ff3e4e;
   transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
@@ -68,10 +77,14 @@ export const ButtonEdit = styled.button`
   color: #2c3e50;
   background: #fcfcfc;
   transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     box-shadow: none;
     transform: none;
     background: whitesmoke;
+    transform: translateY(-5px);
   }
 `;

@@ -1,11 +1,11 @@
 //functions
 import { getMonthFromNumber } from 'core/functions';
 //types
-import { CalendarDay } from 'core/types';
+import { CalendarDay, Task } from 'core/types';
 //constants
 import { maxDaysInMonth } from 'core/constants';
 
-export const getDaysInCurrentMonth = (month: number) => {
+export const getDaysInCurrentMonth = (month: number): Array<Date> => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
 
@@ -46,14 +46,21 @@ export const getDaysInCurrentMonth = (month: number) => {
   }
 };
 
-export const getCalendarCellValue = (day: Date): CalendarDay => {
-  const monthDay = day.getDate();
-  const monthNumber = day.getMonth();
+export const getCalendarCellValue = (date: Date): CalendarDay => {
+  const monthDay = date.getDate();
+  const monthNumber = date.getMonth();
 
   const month = getMonthFromNumber(monthNumber);
 
   return {
+    date,
     monthDay,
     month,
+    tasks: [],
+    id: date.getDay() * monthDay + date.getDate().toString() + month,
   };
 };
+
+export const getNewFilteredTasks = (tasks: Array<Task>, taskId: string): Array<Task> => tasks.filter((task) => task.taskId !== taskId);
+
+export const getNewEditedTasks = (tasks: Array<Task>, newTask: Task): Array<Task> => tasks.map((task) => (task.taskId === newTask.taskId ? newTask : task));

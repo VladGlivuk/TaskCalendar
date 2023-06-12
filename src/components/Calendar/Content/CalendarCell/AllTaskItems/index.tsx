@@ -1,9 +1,10 @@
 import { FC } from 'react';
+//emotion
+import { css } from '@emotion/css';
 //types
 import { Task } from 'core/types';
 //components
 import TaskItem from './TaskItem';
-import { css } from '@emotion/css';
 
 type AllTaskItemsProps = {
   allTasks: Array<Task>;
@@ -20,7 +21,7 @@ const AllTaskItems: FC<AllTaskItemsProps> = ({ allTasks }) => {
       `}
     >
       {allTasks.map((task) => (
-        <TaskItem task={task} key={task.id} />
+        <TaskItem task={task} key={task.taskId} />
       ))}
     </div>
   );

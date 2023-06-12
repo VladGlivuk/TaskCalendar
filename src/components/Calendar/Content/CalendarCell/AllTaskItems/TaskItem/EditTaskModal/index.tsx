@@ -13,12 +13,15 @@ type EditTaskModalProps = {
 };
 
 const EditTaskModal: FC<EditTaskModalProps> = ({ task, setIsEditModalOpen }) => {
-  const { editTaskHandler } = useContext(CalendarCellContext);
+  const {
+    editTaskHandler,
+    calendarDay: { id },
+  } = useContext(CalendarCellContext);
 
   const closeEditModalHandler = () => setIsEditModalOpen(false);
 
   const submitHandler = (newTask: Task) => {
-    editTaskHandler(newTask);
+    editTaskHandler(newTask, id);
     closeEditModalHandler();
   };
 

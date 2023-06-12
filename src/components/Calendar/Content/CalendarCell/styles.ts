@@ -1,12 +1,20 @@
 import styled from '@emotion/styled';
 
-export const Cell = styled.div`
+type CellProps = { isDragging: boolean };
+
+export const Cell = styled.div<CellProps>`
   display: inline-block;
   max-width: 250px;
   width: 100%;
-  height: 200px;
+  height: 300px;
   background-color: #e2e6e9;
   position: relative;
+
+  ${(props) =>
+    props?.isDragging === true &&
+    `
+      border: 0.5px solid black;
+    `}
 `;
 
 export const AddButton = styled.button`
