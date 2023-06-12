@@ -11,7 +11,7 @@ export type CalendarCellContextType = {
   setIsAddTaskFormOpen: Dispatch<SetStateAction<boolean>>;
   handleDragging: (dragging: boolean) => void;
   handleDragAndDropUpdate: (taskId: string, calendarDayId: string) => void;
-  handleSwipeTasksUpdate: (taskId: string, swapTaskId: string, calendarDayId: string) => void;
+  handleSwipeTasksUpdate: (targetTaskId: string, targetCalendarDayId: string, swapTaskId: string, swapCalendarDayId: string) => void;
 };
 
 export const CalendarCellContext = createContext({} as CalendarCellContextType);

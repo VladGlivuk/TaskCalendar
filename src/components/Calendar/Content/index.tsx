@@ -58,12 +58,14 @@ const Content: FC = () => {
     }
   };
 
-  const handleSwipeTasksUpdateCalendar = (taskId: string, swapTaskId: string, calendarDayId: string) => {
-    const currentCalendarDay = calendarData.find((calendarDay) => calendarDay.id === calendarDayId);
-    const taskIndex = currentCalendarDay?.tasks.findIndex((task) => task.taskId === taskId);
+  const handleSwipeTasksUpdateCalendar = (targetTaskId: string, targetCalendarDayId: string, swapTaskId: string, swapCalendarDayId: string) => {
+    if (targetCalendarDayId !== swapCalendarDayId) return;
+
+    const currentCalendarDay = calendarData.find((calendarDay) => calendarDay.id === swapCalendarDayId);
+    const taskIndex = currentCalendarDay?.tasks.findIndex((task) => task.taskId === targetTaskId);
     const swipeTaskIndex = currentCalendarDay?.tasks.findIndex((task) => task.taskId === swapTaskId);
 
-    if (currentCalendarDay && typeof taskIndex === 'number' && typeof swipeTaskIndex === 'number' && taskId !== swapTaskId) {
+    if (currentCalendarDay && typeof taskIndex === 'number' && typeof swipeTaskIndex === 'number' && targetTaskId !== swapTaskId) {
       const newCurrentCalendarDay = {
         ...currentCalendarDay,
         tasks: currentCalendarDay.tasks.map((task, index) =>
@@ -72,7 +74,7 @@ const Content: FC = () => {
       };
 
       const getNewCalendarData = (calendarData: Array<CalendarDay>) =>
-        calendarData.map((calendarDay) => (calendarDay.id === calendarDayId ? newCurrentCalendarDay : calendarDay));
+        calendarData.map((calendarDay) => (calendarDay.id === swapCalendarDayId ? newCurrentCalendarDay : calendarDay));
 
       setCalendarData((calendarData) => getNewCalendarData(calendarData));
     }

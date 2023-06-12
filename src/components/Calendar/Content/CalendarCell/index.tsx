@@ -7,6 +7,8 @@ import { CalendarCellContext, CalendarCellContextType } from './CalendarCellCont
 import { getIsDayFirstOrLastInMonth } from 'core/functions';
 //types
 import { CalendarDay, Task } from 'core/types';
+//constants
+import { maxTasksInDay } from 'core/constants';
 //helpers
 import { getCardsAmountInfo } from './helpers';
 //components
@@ -22,7 +24,7 @@ type CalendarCellProps = {
   deleteTaskHandler: (taskId: string, dayId: string) => void;
   editTaskHandler: (newTask: Task, dayId: string) => void;
   handleDragAndDropUpdate: (taskId: string, calendarDayId: string) => void;
-  handleSwipeTasksUpdate: (taskId: string, swapTaskId: string, calendarDayId: string) => void;
+  handleSwipeTasksUpdate: (targetTaskId: string, targetCalendarDayId: string, swapTaskId: string, swapCalendarDayId: string) => void;
   handleDragging: (dragging: boolean) => void;
 };
 
@@ -90,7 +92,7 @@ const CalendarCell: FC<CalendarCellProps> = ({
           </span>
         )}
 
-        <AddButton onClick={openAddTaskFormModalHandler}>+</AddButton>
+        <AddButton disabled={calendarDay.tasks.length >= maxTasksInDay} onClick={openAddTaskFormModalHandler}>+</AddButton>
 
         {isAddTaskFormOpen && <AddTaskForm />}
 

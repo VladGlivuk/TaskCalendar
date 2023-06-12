@@ -6,13 +6,13 @@ export const Cell = styled.div<CellProps>`
   display: inline-block;
   max-width: 250px;
   width: 100%;
-  height: 300px;
+  height: 320px;
   background-color: #e2e6e9;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   ${(props) =>
-    props?.isDragging === true &&
+    props?.isDragging &&
     `
       border: 0.5px solid black;
       opacity: .8;
@@ -30,4 +30,10 @@ export const AddButton = styled.button`
   border: 1px solid #fff;
   border-radius: 4px;
   cursor: pointer;
+
+  ${(props) =>
+    props?.disabled &&
+    `
+      cursor: not-allowed;
+    `}
 `;

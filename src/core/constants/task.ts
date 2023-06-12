@@ -6,7 +6,7 @@ export const maxTasksInDay = 3;
 export const defaultTaskValue: Task = {
   date: null,
   label: 'New task',
-  colors: ['yellow', 'blue'],
+  colors: ['blue', 'yellow'],
   taskId: '',
   dayId: '',
 };

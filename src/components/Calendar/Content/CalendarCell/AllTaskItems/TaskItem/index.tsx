@@ -49,6 +49,7 @@ const TaskItem: FC<TaskItemProps> = ({ task, task: { label, colors, taskId } }) 
 
   const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
     event.dataTransfer.setData('id', `${task.taskId}`);
+    event.dataTransfer.setData('targetCalendarId', `${calendarDay.id}`);
     handleDragging(true);
     setDraggingId(task.taskId);
   };
@@ -56,8 +57,10 @@ const TaskItem: FC<TaskItemProps> = ({ task, task: { label, colors, taskId } }) 
   const onTaskDragOverHandler = (event: DragEvent<HTMLDivElement>) => event.preventDefault();
 
   const onTaskDropHandler = (event: DragEvent<HTMLDivElement>) => {
-    const id = event.dataTransfer.getData('id');
-    handleSwipeTasksUpdate(id, task.taskId, calendarDay.id);
+    const targetId = event.dataTransfer.getData('id');
+    const targetCalendarId = event.dataTransfer.getData('targetCalendarId');
+
+    handleSwipeTasksUpdate(targetId, targetCalendarId, task.taskId, calendarDay.id);
     handleDragging(false);
   };
 

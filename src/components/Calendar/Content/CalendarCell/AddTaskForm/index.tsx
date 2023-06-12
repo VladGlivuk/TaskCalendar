@@ -4,7 +4,7 @@ import { CalendarCellContext } from '../CalendarCellContext';
 //types
 import { Task } from 'core/types';
 //constants
-import { defaultTaskValue } from 'core/constants';
+import { defaultTaskValue, maxTasksInDay } from 'core/constants';
 //components
 import TaskFormData from 'shared/components/TaskFormData';
 import Modal from 'shared/components/Modal';
@@ -15,7 +15,7 @@ const AddTaskForm: FC = () => {
   const closeAddTaskFormModal = () => setIsAddTaskFormOpen(false);
 
   const submitHandler = (newTask: Task) => {
-    if (calendarDay.tasks.length < 3) {
+    if (calendarDay.tasks.length < maxTasksInDay) {
       addTaskHandler(newTask, calendarDay.id);
       closeAddTaskFormModal();
     }

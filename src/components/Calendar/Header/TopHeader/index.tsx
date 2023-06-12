@@ -11,9 +11,9 @@ const TopHeader: FC = () => {
   const currentDateInfo = `${currentMonth} ${currentYear}`;
 
   return (
-    <div>
+    <>
       <h1 className='title'>{currentDateInfo}</h1>
-    </div>
+    </>
   );
 };
 
