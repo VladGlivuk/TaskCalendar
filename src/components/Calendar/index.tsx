@@ -16,7 +16,8 @@ import { CalendarWrapper } from './styles';
 const Calendar: FC = () => {
   const [filterOption, setFilterOption] = useState<FilterOption>(LABEL);
   const [filterValue, setFilterValue] = useState('');
-  const debouncedFilterValue = useDebounceValue(filterValue, 1000);
+
+  const debouncedFilterValue = useDebounceValue(filterValue, 300);
 
   const onFilterOptionChange = (newOption: FilterOption) => setFilterOption(newOption);
   const onFilterValueChange = (newValue: string) => setFilterValue(newValue);

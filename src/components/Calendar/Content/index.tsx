@@ -2,9 +2,22 @@ import { FC, useEffect, useState } from 'react';
 //types
 import { CalendarDay, Task } from 'core/types';
 //helpers
-import { getCalendarCellValue, getDaysInCurrentMonth, getNewEditedTasks, getNewFilteredTasks } from './helpers';
-//constants
-import { maxTasksInDay } from 'core/constants';
+import {
+  getCalendarCellValue,
+  getCalendarDayById,
+  getCalendarWithEditedTask,
+  getCalendarWithNewTask,
+  getCalendarWithoutDeletedTask,
+  getDaysInCurrentMonth,
+  getIsValidDragAndDrop,
+  getIsValidTaskSwipe,
+  getNewCalendarAfterDragAndDrop,
+  getNewCalendarAfterTaskSwipe,
+  getNewCalendarDayAfterTaskSwipe,
+  getNewPickedDay,
+  getNewPreviousDay,
+  getTaskIndexById,
+} from './helpers';
 //components
 import CalendarCell from './CalendarCell';
 //styles
@@ -24,59 +37,41 @@ const Content: FC = () => {
     setCalendarData(newCalendarData);
   }, []);
 
-  const addTaskHandler = (newTask: Task, dayId: string) =>
-    setCalendarData((calendar) =>
-      calendar.map((calendarDay) => (calendarDay.id === dayId ? { ...calendarDay, tasks: [...calendarDay.tasks, newTask] } : calendarDay))
-    );
+  const addTaskHandler = (newTask: Task, dayId: string) => setCalendarData((calendar) => getCalendarWithNewTask(calendar, dayId, newTask));
 
-  const deleteTaskHandler = (taskId: string, dayId: string) => {
-    setCalendarData((calendar) =>
-      calendar.map((calendarDay) => (calendarDay.id === dayId ? { ...calendarDay, tasks: getNewFilteredTasks(calendarDay.tasks, taskId) } : calendarDay))
-    );
-  };
+  const deleteTaskHandler = (taskId: string, dayId: string) => setCalendarData((calendar) => getCalendarWithoutDeletedTask(calendar, dayId, taskId));
 
-  const editTaskHandler = (newTask: Task, dayId: string) =>
-    setCalendarData((calendar) =>
-      calendar.map((calendarDay) => (calendarDay.id === dayId ? { ...calendarDay, tasks: getNewEditedTasks(calendarDay.tasks, newTask) } : calendarDay))
-    );
+  const editTaskHandler = (editedTask: Task, dayId: string) => setCalendarData((calendar) => getCalendarWithEditedTask(calendar, dayId, editedTask));
 
   const handleDragAndDropUpdateCalendar = (taskId: string, calendarDayId: string) => {
-    const pickedCalendarDay = calendarData.find((day) => day.id === calendarDayId);
+    const pickedCalendarDay = getCalendarDayById(calendarData, calendarDayId);
     const previousCalendarDay = calendarData.find((calendarDay) => calendarDay.tasks.find((task) => task.taskId === taskId));
     const pickedTask = previousCalendarDay?.tasks.find((calendarTask) => calendarTask.taskId === taskId);
 
-    if (pickedCalendarDay && pickedCalendarDay.tasks.length < maxTasksInDay && pickedTask && previousCalendarDay && previousCalendarDay.id !== calendarDayId) {
-      const newPreviousDay = { ...previousCalendarDay, tasks: previousCalendarDay?.tasks.filter((task) => task.taskId !== taskId) };
-      const newPickedDay = { ...pickedCalendarDay, tasks: [...pickedCalendarDay.tasks, pickedTask] };
+    const isValidDragAndDrop = getIsValidDragAndDrop(pickedCalendarDay, pickedTask, previousCalendarDay, calendarDayId);
 
-      const getNewCalendarData = (calendarData: Array<CalendarDay>) =>
-        calendarData.map((calendarDay) =>
-          calendarDay.id === pickedCalendarDay.id ? newPickedDay : calendarDay.id === previousCalendarDay?.id ? newPreviousDay : calendarDay
-        );
+    if (pickedCalendarDay && pickedTask && previousCalendarDay && isValidDragAndDrop) {
+      const newPreviousDay = getNewPreviousDay(previousCalendarDay, taskId);
+      const newPickedDay = getNewPickedDay(pickedCalendarDay, pickedTask);
 
-      setCalendarData((calendarData) => getNewCalendarData(calendarData));
+      setCalendarData((calendarData) => getNewCalendarAfterDragAndDrop(calendarData, pickedCalendarDay, newPickedDay, previousCalendarDay, newPreviousDay));
     }
   };
 
   const handleSwipeTasksUpdateCalendar = (targetTaskId: string, targetCalendarDayId: string, swapTaskId: string, swapCalendarDayId: string) => {
     if (targetCalendarDayId !== swapCalendarDayId) return;
 
-    const currentCalendarDay = calendarData.find((calendarDay) => calendarDay.id === swapCalendarDayId);
-    const taskIndex = currentCalendarDay?.tasks.findIndex((task) => task.taskId === targetTaskId);
-    const swipeTaskIndex = currentCalendarDay?.tasks.findIndex((task) => task.taskId === swapTaskId);
+    const currentCalendarDay = getCalendarDayById(calendarData, swapCalendarDayId);
 
-    if (currentCalendarDay && typeof taskIndex === 'number' && typeof swipeTaskIndex === 'number' && targetTaskId !== swapTaskId) {
-      const newCurrentCalendarDay = {
-        ...currentCalendarDay,
-        tasks: currentCalendarDay.tasks.map((task, index) =>
-          index === taskIndex ? currentCalendarDay.tasks[swipeTaskIndex] : index === swipeTaskIndex ? currentCalendarDay.tasks[taskIndex] : task
-        ),
-      };
+    const taskIndex = getTaskIndexById(currentCalendarDay?.tasks, targetTaskId);
+    const swipeTaskIndex = getTaskIndexById(currentCalendarDay?.tasks, swapTaskId);
 
-      const getNewCalendarData = (calendarData: Array<CalendarDay>) =>
-        calendarData.map((calendarDay) => (calendarDay.id === swapCalendarDayId ? newCurrentCalendarDay : calendarDay));
+    const isValidTaskSwipe = getIsValidTaskSwipe(currentCalendarDay, taskIndex, swipeTaskIndex, targetTaskId, swapTaskId);
 
-      setCalendarData((calendarData) => getNewCalendarData(calendarData));
+    if (currentCalendarDay && typeof taskIndex === 'number' && typeof swipeTaskIndex === 'number' && isValidTaskSwipe) {
+      const newCurrentCalendarDay = getNewCalendarDayAfterTaskSwipe(currentCalendarDay, taskIndex, swipeTaskIndex);
+
+      setCalendarData((calendarData) => getNewCalendarAfterTaskSwipe(calendarData, newCurrentCalendarDay, swapCalendarDayId));
     }
   };
 
