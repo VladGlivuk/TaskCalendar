@@ -8,5 +8,4 @@ export const defaultTaskValue: Task = {
   label: 'New task',
   colors: ['blue', 'yellow'],
   taskId: '',
-  dayId: '',
 };

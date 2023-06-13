@@ -17,7 +17,7 @@ export const ButtonWrapper = styled.div<ButtonProps>`
   font-size: 0.8rem;
   border: none;
   color: #2c3e50;
-  background: #fcfcfc;
+  background: #ececec;
   transition: all 0.25s ease;
   display: flex;
   justify-content: center;

@@ -5,6 +5,7 @@ import { getMonthFromNumber } from 'core/functions';
 import Filter from './Filter';
 //styles
 import { TopHeaderWrapper } from './styles';
+import DownloadButton from './DownloadButton';
 
 const TopHeader: FC = () => {
   const currentDate = new Date();
@@ -18,6 +19,7 @@ const TopHeader: FC = () => {
     <TopHeaderWrapper>
       <Filter />
       <h1 className='title'>{currentDateInfo}</h1>
+      <DownloadButton />
     </TopHeaderWrapper>
   );
 };
