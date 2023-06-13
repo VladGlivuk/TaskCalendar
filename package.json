@@ -1,6 +1,5 @@
 {
   "name": "task-calendar",
-  "homepage": "https://vladglivuk.github.io/TaskCalendar/",
   "private": true,
   "version": "0.1.0",
   "type": "module",

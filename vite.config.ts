@@ -11,5 +11,6 @@ export default defineConfig({
       components: '/src/components',
     },
   },
+  base: "/TaskCalendar/",
   plugins: [react()],
 });
