@@ -1,9 +1,9 @@
 {
   "name": "task-calendar",
+  "homepage": "https://vladglivuk.github.io/TaskCalendar/",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
-  "homepage": "http://VladGlivuk.github.io/TaskCalendar",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
