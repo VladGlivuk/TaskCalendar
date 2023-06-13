@@ -39,11 +39,11 @@ const CalendarCell: FC<CalendarCellProps> = ({
   handleSwipeTasksUpdate,
   handleDragging,
 }) => {
-  const { month, monthDay, tasks } = calendarDay;
+  const { month, monthDay, tasks, holidayInfo } = calendarDay;
 
   const [isAddTaskFormOpen, setIsAddTaskFormOpen] = useState(false);
 
-  const isAddButtonDisabled = useMemo(() => calendarDay.tasks.length >= maxTasksInDay, [calendarDay.tasks.length, maxTasksInDay]);
+  const isAddButtonDisabled = useMemo(() => !!(holidayInfo || calendarDay.tasks.length >= maxTasksInDay), [calendarDay.tasks.length, maxTasksInDay]);
 
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
@@ -83,10 +83,25 @@ const CalendarCell: FC<CalendarCellProps> = ({
     <CalendarCellContext.Provider value={allTaskContextValue}>
       <Cell isDragging={isDragging} onDragOver={onCalendarCellDragOverHandler} onDrop={onCalendarCellDropHandler}>
         {isDayLastOrFirst && <span>{month}</span>}
+
         <span>{monthDay}</span>
+
         {isCurrentDay && <span> Today</span>}
 
-        {!!tasks.length && (
+        {holidayInfo && (
+          <div
+            className={css`
+              color: red;
+              text-align: center;
+              font-weight: 700;
+              font-size: 28px;
+            `}
+          >
+            {`Holiday - ${holidayInfo.localName}`}
+          </div>
+        )}
+
+        {!holidayInfo && !!tasks.length && (
           <span
             className={css`
               padding-left: 12px;

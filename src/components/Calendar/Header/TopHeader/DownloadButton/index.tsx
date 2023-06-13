@@ -13,6 +13,7 @@ const DownloadButton: FC = () => {
 
       if (calendarData) {
         const fileName = 'calendarData';
+
         const formattedJson = JSON.stringify(JSON.parse(calendarData), null, 6);
         const blob = new Blob([formattedJson], { type: 'application/json' });
         const href = URL.createObjectURL(blob);

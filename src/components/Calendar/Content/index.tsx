@@ -19,6 +19,7 @@ import {
   getNewPickedDay,
   getNewPreviousDay,
   getTaskIndexById,
+  holidaysFetch,
 } from './helpers';
 //components
 import CalendarCell from './CalendarCell';
@@ -28,6 +29,8 @@ import { CellsWrapper } from 'shared/styles';
 const Content: FC = () => {
   const [calendarData, setCalendarData] = useState<Array<CalendarDay>>([]);
   const [isDragging, setIsDragging] = useState(false);
+
+  const currentDate = new Date();
 
   useEffect(() => {
     if (calendarData.length >= 1) {
@@ -42,22 +45,21 @@ const Content: FC = () => {
 
   useEffect(() => {
     try {
-      const currentCalendarData = localStorage.getItem(calendar);
-      console.log('file: index.tsx:32  calendarData:', calendarData);
+      holidaysFetch(currentDate).then((holidays) => {
+        const currentCalendarData = localStorage.getItem(calendar);
 
-      if (currentCalendarData) {
-        const parsedCalendarData = JSON.parse(currentCalendarData);
-        console.log('file: index.tsx:36  parsedCalendarData:', parsedCalendarData);
-        setCalendarData(parsedCalendarData);
-      } else {
-        const currentDate = new Date();
-        const currentMonth = currentDate.getMonth() + 1;
-        const days = getDaysInCurrentMonth(currentMonth);
+        if (currentCalendarData) {
+          const parsedCalendarData = JSON.parse(currentCalendarData);
+          setCalendarData(parsedCalendarData);
+        } else {
+          const currentMonth = currentDate.getMonth() + 1;
+          const days = getDaysInCurrentMonth(currentMonth);
 
-        const newCalendarData: Array<CalendarDay> = days.map((day) => getCalendarCellValue(day));
+          const newCalendarData: Array<CalendarDay> = days.map((day) => getCalendarCellValue(day, holidays));
 
-        setCalendarData(newCalendarData);
-      }
+          setCalendarData(newCalendarData);
+        }
+      });
     } catch (error) {
       console.log('file: index.tsx:47  error:', error);
     }

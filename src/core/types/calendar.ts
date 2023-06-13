@@ -1,5 +1,5 @@
 //types
-import { Task } from ".";
+import { Task } from '.';
 
 export type CalendarDay = {
   date: Date;
@@ -7,4 +7,28 @@ export type CalendarDay = {
   month: string;
   tasks: Array<Task>;
   id: string;
+  holidayInfo: Holiday | null;
 };
+
+export type CountryInfo = {
+  countryCode: string;
+  name: string;
+};
+
+export type HolidayResponse = {
+  date: string;
+  localName: string;
+  name: string;
+  countryCode: string;
+  fixed: boolean;
+  global: boolean;
+  counties: null;
+  launchYear: null;
+  types: Array<string>;
+};
+
+export type Holiday = {
+  date: string;
+  localName: string;
+  countryCode: string;
+}
