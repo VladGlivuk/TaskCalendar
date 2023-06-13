@@ -5,8 +5,8 @@ import { css } from '@emotion/css';
 import { CalendarCellContext } from '../../../CalendarCellContext';
 //components
 import Modal from 'shared/components/Modal';
-//styles
-import { ButtonClose, DeleteButton } from 'shared/styles/buttons';
+import Button from 'shared/components/Button';
+import { BUTTON_TYPE } from 'core/types';
 
 type DeleteModalProps = {
   taskId: string;
@@ -40,12 +40,9 @@ const DeleteModal: FC<DeleteModalProps> = ({ setIsDeleteModalOpen, taskId }) => 
             align-items: center;
           `}
         >
-          <DeleteButton title='Delete' onClick={deleteClickHandler}>
-            Delete
-          </DeleteButton>
-          <ButtonClose title='Cancel' onClick={closeModalClickHandler}>
-            Close
-          </ButtonClose>
+          <Button type={BUTTON_TYPE.DELETE} title='Delete' clickHandler={deleteClickHandler} />
+
+          <Button type={BUTTON_TYPE.CLOSE} title='Close' clickHandler={closeModalClickHandler} />
         </div>
       </div>
     </Modal>

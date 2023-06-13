@@ -1,6 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 //types
 import { CalendarDay, Task } from 'core/types';
+//constants
+import { calendar } from 'core/constants';
 //helpers
 import {
   getCalendarCellValue,
@@ -28,13 +30,37 @@ const Content: FC = () => {
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1;
-    const days = getDaysInCurrentMonth(currentMonth);
+    if (calendarData.length >= 1) {
+      const stringifiedCalendarData = JSON.stringify(calendarData);
+      try {
+        localStorage.setItem(calendar, stringifiedCalendarData);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [calendarData]);
 
-    const newCalendarData: Array<CalendarDay> = days.map((day) => getCalendarCellValue(day));
+  useEffect(() => {
+    try {
+      const currentCalendarData = localStorage.getItem(calendar);
+      console.log('file: index.tsx:32  calendarData:', calendarData);
 
-    setCalendarData(newCalendarData);
+      if (currentCalendarData) {
+        const parsedCalendarData = JSON.parse(currentCalendarData);
+        console.log('file: index.tsx:36  parsedCalendarData:', parsedCalendarData);
+        setCalendarData(parsedCalendarData);
+      } else {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1;
+        const days = getDaysInCurrentMonth(currentMonth);
+
+        const newCalendarData: Array<CalendarDay> = days.map((day) => getCalendarCellValue(day));
+
+        setCalendarData(newCalendarData);
+      }
+    } catch (error) {
+      console.log('file: index.tsx:47  error:', error);
+    }
   }, []);
 
   const addTaskHandler = (newTask: Task, dayId: string) => setCalendarData((calendar) => getCalendarWithNewTask(calendar, dayId, newTask));

@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 //emotion
 import { css } from '@emotion/css';
 //types
-import { Task } from 'core/types';
+import { BUTTON_TYPE, Task } from 'core/types';
 //constants
 import { possibleTaskColors } from 'core/constants';
 //helpers
@@ -10,8 +10,7 @@ import { getIsFormValid, getNewFilteredTaskValue, getNewTaskValue, getTaskWithNe
 //components
 import Input from '../Input';
 import MultiSelect from '../Multiselect';
-//styles
-import { ButtonClose, SubmitButton } from 'shared/styles/buttons';
+import Button from '../Button';
 
 type TaskFormDataProps = {
   task: Task;
@@ -47,7 +46,7 @@ const TaskFormData: FC<TaskFormDataProps> = ({ task, submitHandler, closeModalCl
         <Input title='Enter the label of task *' id='createTaskInput' value={newTaskValue.label} onChange={onChangeLabelValue} />
         <MultiSelect
           options={possibleTaskColors}
-          label={'Pick a color (optional)'}
+          label={'Pick colors (optional)'}
           values={newTaskValue.colors}
           onChange={onChangeColorValue}
           onDeleteHandler={onDeleteColorValue}
@@ -61,8 +60,8 @@ const TaskFormData: FC<TaskFormDataProps> = ({ task, submitHandler, closeModalCl
           column-gap: 12px;
         `}
       >
-        <SubmitButton onClick={submitClickHandler}>Submit</SubmitButton>
-        <ButtonClose onClick={closeModalClickHandler}>Close</ButtonClose>
+        <Button type={BUTTON_TYPE.SUBMIT} title="Submit" clickHandler={submitClickHandler} />
+        <Button type={BUTTON_TYPE.CLOSE} title="Close" clickHandler={closeModalClickHandler} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { FC, useState, DragEvent } from 'react';
+import { FC, useState, DragEvent, useMemo } from 'react';
 //emotion
 import { css } from '@emotion/css';
 //context
@@ -6,7 +6,7 @@ import { CalendarCellContext, CalendarCellContextType } from './CalendarCellCont
 //functions
 import { getIsDayFirstOrLastInMonth } from 'core/functions';
 //types
-import { CalendarDay, Task } from 'core/types';
+import { BUTTON_TYPE, CalendarDay, Task } from 'core/types';
 //constants
 import { maxTasksInDay } from 'core/constants';
 //helpers
@@ -14,8 +14,9 @@ import { getCardsAmountInfo } from './helpers';
 //components
 import AddTaskForm from './AddTaskForm';
 import AllTaskItems from './AllTaskItems';
+import Button from 'shared/components/Button';
 //styles
-import { AddButton, Cell } from './styles';
+import { Cell } from './styles';
 
 type CalendarCellProps = {
   calendarDay: CalendarDay;
@@ -42,6 +43,8 @@ const CalendarCell: FC<CalendarCellProps> = ({
 
   const [isAddTaskFormOpen, setIsAddTaskFormOpen] = useState(false);
 
+  const isAddButtonDisabled = useMemo(() => calendarDay.tasks.length >= maxTasksInDay, [calendarDay.tasks.length, maxTasksInDay]);
+
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   const currentMonth = currentDate.getMonth();
@@ -61,10 +64,12 @@ const CalendarCell: FC<CalendarCellProps> = ({
     setIsAddTaskFormOpen,
     handleDragging,
     handleDragAndDropUpdate,
-    handleSwipeTasksUpdate
+    handleSwipeTasksUpdate,
   };
 
-  const openAddTaskFormModalHandler = () => setIsAddTaskFormOpen(true);
+  const openAddTaskFormModalHandler = () => {
+    if (!isAddButtonDisabled) setIsAddTaskFormOpen(true);
+  };
 
   const onCalendarCellDragOverHandler = (event: DragEvent<HTMLDivElement>) => event.preventDefault();
 
@@ -92,7 +97,7 @@ const CalendarCell: FC<CalendarCellProps> = ({
           </span>
         )}
 
-        <AddButton disabled={calendarDay.tasks.length >= maxTasksInDay} onClick={openAddTaskFormModalHandler}>+</AddButton>
+        <Button type={BUTTON_TYPE.ADD} disabled={isAddButtonDisabled} clickHandler={openAddTaskFormModalHandler} title='+' />
 
         {isAddTaskFormOpen && <AddTaskForm />}
 
