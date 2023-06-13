@@ -30,8 +30,6 @@ const Content: FC = () => {
   const [calendarData, setCalendarData] = useState<Array<CalendarDay>>([]);
   const [isDragging, setIsDragging] = useState(false);
 
-  const currentDate = new Date();
-
   useEffect(() => {
     if (calendarData.length >= 1) {
       const stringifiedCalendarData = JSON.stringify(calendarData);
@@ -45,13 +43,14 @@ const Content: FC = () => {
 
   useEffect(() => {
     try {
-      holidaysFetch(currentDate).then((holidays) => {
+      holidaysFetch().then((holidays) => {
         const currentCalendarData = localStorage.getItem(calendar);
 
         if (currentCalendarData) {
           const parsedCalendarData = JSON.parse(currentCalendarData);
           setCalendarData(parsedCalendarData);
         } else {
+          const currentDate = new Date();
           const currentMonth = currentDate.getMonth() + 1;
           const days = getDaysInCurrentMonth(currentMonth);
 

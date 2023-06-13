@@ -10,11 +10,6 @@ export type CalendarDay = {
   holidayInfo: Holiday | null;
 };
 
-export type CountryInfo = {
-  countryCode: string;
-  name: string;
-};
-
 export type HolidayResponse = {
   date: string;
   localName: string;
@@ -31,4 +26,4 @@ export type Holiday = {
   date: string;
   localName: string;
   countryCode: string;
-}
+};

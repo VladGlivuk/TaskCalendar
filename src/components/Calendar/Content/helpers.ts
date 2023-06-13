@@ -1,9 +1,9 @@
 //functions
 import { getMonthFromNumber } from 'core/functions';
 //types
-import { CalendarDay, CountryInfo, Holiday, HolidayResponse, Task } from 'core/types';
+import { CalendarDay, Holiday, HolidayResponse, Task } from 'core/types';
 //constants
-import { getAllHolidaysEndpoint, getAvailableCountriesEndpoint, maxDaysInMonth, maxTasksInDay } from 'core/constants';
+import { getAllHolidaysEndpoint, maxDaysInMonth, maxTasksInDay } from 'core/constants';
 
 export const getDaysInCurrentMonth = (month: number): Array<Date> => {
   const currentDate = new Date();
@@ -165,25 +165,15 @@ export const getIsValidTaskSwipe = (
 ) =>
   currentCalendarDay && typeof taskIndex === 'number' && typeof swipeTaskIndex === 'number' && targetTaskId !== swapTaskId && !currentCalendarDay.holidayInfo;
 
-export const holidaysFetch = async (currentDate: Date): Promise<Array<Holiday> | undefined> => {
-  const currentYear = currentDate.getFullYear();
-  const searchCountry = 'Ukraine';
+export const holidaysFetch = async (): Promise<Array<Holiday> | undefined> => {
+  const allHolidaysResponse = await fetch(getAllHolidaysEndpoint, { method: 'GET' });
+  const allHolidaysJson: Array<HolidayResponse> = await allHolidaysResponse.json();
 
-  const availableCountriesResponse = await fetch(getAvailableCountriesEndpoint, { method: 'GET' });
-  const availableCountriesJson: Array<CountryInfo> = await availableCountriesResponse.json();
-  const countryCode = availableCountriesJson.find((country: CountryInfo) => country.name === searchCountry)?.countryCode;
+  const newHolidays: Array<Holiday> = allHolidaysJson.map(({ date, localName, countryCode }) => ({
+    date,
+    localName,
+    countryCode,
+  }));
 
-  if (countryCode) {
-    const allHolidaysResponse = await fetch(getAllHolidaysEndpoint(currentYear, countryCode), { method: 'GET' });
-    const allHolidaysJson: Array<HolidayResponse> = await allHolidaysResponse.json();
-
-    const newHolidays: Array<Holiday> = allHolidaysJson.map(({ date, localName, countryCode }) => ({
-      date,
-      localName,
-      countryCode,
-    }));
-
-    return newHolidays;
-  }
-  return;
+  return newHolidays;
 };
