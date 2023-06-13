@@ -1,6 +1,6 @@
 import { FC, useContext } from 'react';
 //context
-import { FilterContext } from 'components/Calendar/FilterContext';
+import { WrapperContext } from 'components/Calendar/WrapperContext';
 //types
 import { FilterOption } from 'core/types';
 //components
@@ -12,7 +12,7 @@ import Input from 'shared/components/Input';
 import { FilterWrapper } from './styles';
 
 const Filter: FC = () => {
-  const { filterValue, onFilterOptionChange, onFilterValueChange } = useContext(FilterContext);
+  const { filterValue, onFilterOptionChange, onFilterValueChange } = useContext(WrapperContext);
 
   const onFilterOptionChangeHandler = (filterValue: string) => onFilterOptionChange(filterValue as FilterOption);
 

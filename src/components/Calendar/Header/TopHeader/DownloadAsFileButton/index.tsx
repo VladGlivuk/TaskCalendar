@@ -6,7 +6,7 @@ import { calendar } from 'core/constants';
 //components
 import Button from 'shared/components/Button';
 
-const DownloadButton: FC = () => {
+const DownloadAsFileButton: FC = () => {
   const downloadFileClickHandler = () => {
     try {
       const calendarData = localStorage.getItem(calendar);
@@ -35,4 +35,4 @@ const DownloadButton: FC = () => {
   return <Button title='Download calendar as JSON' type={BUTTON_TYPE.DEFAULT} clickHandler={downloadFileClickHandler} />;
 };
 
-export default DownloadButton;
+export default DownloadAsFileButton;

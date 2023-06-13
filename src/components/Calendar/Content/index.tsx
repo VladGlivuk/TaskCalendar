@@ -105,7 +105,7 @@ const Content: FC = () => {
   const handleDragging = (dragging: boolean) => setIsDragging(dragging);
 
   return (
-    <CellsWrapper>
+    <CellsWrapper id='calendar'>
       {calendarData.map((calendarDay) => (
         <CalendarCell
           calendarDay={calendarDay}

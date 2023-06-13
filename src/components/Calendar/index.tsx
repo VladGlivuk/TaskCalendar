@@ -1,6 +1,8 @@
 import { FC, useState } from 'react';
+import html2canvas from 'html2canvas';
+import saveAs from 'file-saver';
 //context
-import { FilterContext, FilterContextProps } from './FilterContext';
+import { WrapperContext, WrapperContextProps } from './WrapperContext';
 //hooks
 import { useDebounceValue } from 'core/hooks';
 //types
@@ -22,21 +24,33 @@ const Calendar: FC = () => {
   const onFilterOptionChange = (newOption: FilterOption) => setFilterOption(newOption);
   const onFilterValueChange = (newValue: string) => setFilterValue(newValue);
 
-  const filterValueContext: FilterContextProps = {
+  const downloadElementAsImage = (elementId: string, fileName: string) => {
+    const targetElement = document.getElementById(elementId);
+
+    if (targetElement) {
+      html2canvas(targetElement).then((canvas) => {
+        const dataURL = canvas.toDataURL();
+        saveAs(dataURL, fileName);
+      });
+    }
+  };
+
+  const wrapperValueContext: WrapperContextProps = {
     filterOption,
     filterValue,
     debouncedFilterValue,
     onFilterOptionChange,
     onFilterValueChange,
+    downloadElementAsImage,
   };
 
   return (
-    <FilterContext.Provider value={filterValueContext}>
+    <WrapperContext.Provider value={wrapperValueContext}>
       <CalendarWrapper>
         <Header></Header>
         <Content></Content>
       </CalendarWrapper>
-    </FilterContext.Provider>
+    </WrapperContext.Provider>
   );
 };
 

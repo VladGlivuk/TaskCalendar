@@ -3,9 +3,10 @@ import { FC } from 'react';
 import { getMonthFromNumber } from 'core/functions';
 //components
 import Filter from './Filter';
+import DownloadAsFileButton from './DownloadAsFileButton';
+import DownloadAsImageButton from './DownloadAsImageButton';
 //styles
 import { TopHeaderWrapper } from './styles';
-import DownloadButton from './DownloadButton';
 
 const TopHeader: FC = () => {
   const currentDate = new Date();
@@ -19,7 +20,8 @@ const TopHeader: FC = () => {
     <TopHeaderWrapper>
       <Filter />
       <h1 className='title'>{currentDateInfo}</h1>
-      <DownloadButton />
+      <DownloadAsFileButton />
+      <DownloadAsImageButton />
     </TopHeaderWrapper>
   );
 };

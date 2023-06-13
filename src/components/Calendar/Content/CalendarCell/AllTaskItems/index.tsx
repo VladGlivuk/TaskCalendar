@@ -2,7 +2,7 @@ import { FC, useContext, useEffect, useState } from 'react';
 //emotion
 import { css } from '@emotion/css';
 //context
-import { FilterContext } from 'components/Calendar/FilterContext';
+import { WrapperContext } from 'components/Calendar/WrapperContext';
 //types
 import { Task } from 'core/types';
 //helpers
@@ -17,7 +17,7 @@ type AllTaskItemsProps = {
 const AllTaskItems: FC<AllTaskItemsProps> = ({ allTasks }) => {
   const [filteredTasks, setFilteredTasks] = useState(allTasks);
 
-  const { debouncedFilterValue, filterOption } = useContext(FilterContext);
+  const { debouncedFilterValue, filterOption } = useContext(WrapperContext);
 
   useEffect(() => {
     const newFilteredTasks = getNewFilteredTasks(allTasks, filterOption, debouncedFilterValue);
