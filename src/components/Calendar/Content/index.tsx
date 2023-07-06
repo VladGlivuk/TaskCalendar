@@ -1,37 +1,33 @@
 import { FC, useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+//store
+import CalendarStore from 'stores/CalendarStore';
 //types
-import { CalendarDay, Task } from 'core/types';
+import { Task } from 'core/types';
 //constants
 import { calendar } from 'core/constants';
 //helpers
 import {
-  getCalendarCellValue,
   getCalendarDayById,
-  getCalendarWithEditedTask,
-  getCalendarWithNewTask,
-  getCalendarWithoutDeletedTask,
-  getDaysInCurrentMonth,
   getIsValidDragAndDrop,
   getIsValidTaskSwipe,
-  getNewCalendarAfterDragAndDrop,
-  getNewCalendarAfterTaskSwipe,
   getNewCalendarDayAfterTaskSwipe,
   getNewPickedDay,
   getNewPreviousDay,
   getTaskIndexById,
-  holidaysFetch,
 } from './helpers';
 //components
 import CalendarCell from './CalendarCell';
 //styles
 import { CellsWrapper } from 'shared/styles';
 
-const Content: FC = () => {
-  const [calendarData, setCalendarData] = useState<Array<CalendarDay>>([]);
+const Content: FC = observer(() => {
   const [isDragging, setIsDragging] = useState(false);
 
+  const { calendarData } = CalendarStore;
+
   useEffect(() => {
-    if (calendarData.length >= 1) {
+    if (calendarData.total >= 1) {
       const stringifiedCalendarData = JSON.stringify(calendarData);
       try {
         localStorage.setItem(calendar, stringifiedCalendarData);
@@ -42,37 +38,18 @@ const Content: FC = () => {
   }, [calendarData]);
 
   useEffect(() => {
-    try {
-      holidaysFetch().then((holidays) => {
-        const currentCalendarData = localStorage.getItem(calendar);
-
-        if (currentCalendarData) {
-          const parsedCalendarData = JSON.parse(currentCalendarData);
-          setCalendarData(parsedCalendarData);
-        } else {
-          const currentDate = new Date();
-          const currentMonth = currentDate.getMonth() + 1;
-          const days = getDaysInCurrentMonth(currentMonth);
-
-          const newCalendarData: Array<CalendarDay> = days.map((day) => getCalendarCellValue(day, holidays));
-
-          setCalendarData(newCalendarData);
-        }
-      });
-    } catch (error) {
-      console.log('file: index.tsx:47  error:', error);
-    }
+    CalendarStore.fetchCalendarData();
   }, []);
 
-  const addTaskHandler = (newTask: Task, dayId: string) => setCalendarData((calendar) => getCalendarWithNewTask(calendar, dayId, newTask));
+  const addTaskHandler = (newTask: Task, dayId: string) => CalendarStore.addTaskHandler(dayId, newTask);
 
-  const deleteTaskHandler = (taskId: string, dayId: string) => setCalendarData((calendar) => getCalendarWithoutDeletedTask(calendar, dayId, taskId));
+  const deleteTaskHandler = (taskId: string, dayId: string) => CalendarStore.deleteTaskHandler(dayId, taskId);
 
-  const editTaskHandler = (editedTask: Task, dayId: string) => setCalendarData((calendar) => getCalendarWithEditedTask(calendar, dayId, editedTask));
+  const editTaskHandler = (editedTask: Task, dayId: string) => CalendarStore.editTaskHandler(dayId, editedTask);
 
   const handleDragAndDropUpdateCalendar = (taskId: string, calendarDayId: string) => {
-    const pickedCalendarDay = getCalendarDayById(calendarData, calendarDayId);
-    const previousCalendarDay = calendarData.find((calendarDay) => calendarDay.tasks.find((task) => task.taskId === taskId));
+    const pickedCalendarDay = getCalendarDayById(calendarData.data, calendarDayId);
+    const previousCalendarDay = calendarData.data.find((calendarDay) => calendarDay.tasks.find((task) => task.taskId === taskId));
     const pickedTask = previousCalendarDay?.tasks.find((calendarTask) => calendarTask.taskId === taskId);
 
     const isValidDragAndDrop = getIsValidDragAndDrop(pickedCalendarDay, pickedTask, previousCalendarDay, calendarDayId);
@@ -81,14 +58,14 @@ const Content: FC = () => {
       const newPreviousDay = getNewPreviousDay(previousCalendarDay, taskId);
       const newPickedDay = getNewPickedDay(pickedCalendarDay, pickedTask);
 
-      setCalendarData((calendarData) => getNewCalendarAfterDragAndDrop(calendarData, pickedCalendarDay, newPickedDay, previousCalendarDay, newPreviousDay));
+      CalendarStore.dragAndDropHandler(pickedCalendarDay, newPickedDay, previousCalendarDay, newPreviousDay);
     }
   };
 
   const handleSwipeTasksUpdateCalendar = (targetTaskId: string, targetCalendarDayId: string, swapTaskId: string, swapCalendarDayId: string) => {
     if (targetCalendarDayId !== swapCalendarDayId) return;
 
-    const currentCalendarDay = getCalendarDayById(calendarData, swapCalendarDayId);
+    const currentCalendarDay = getCalendarDayById(calendarData.data, swapCalendarDayId);
 
     const taskIndex = getTaskIndexById(currentCalendarDay?.tasks, targetTaskId);
     const swipeTaskIndex = getTaskIndexById(currentCalendarDay?.tasks, swapTaskId);
@@ -98,7 +75,7 @@ const Content: FC = () => {
     if (currentCalendarDay && typeof taskIndex === 'number' && typeof swipeTaskIndex === 'number' && isValidTaskSwipe) {
       const newCurrentCalendarDay = getNewCalendarDayAfterTaskSwipe(currentCalendarDay, taskIndex, swipeTaskIndex);
 
-      setCalendarData((calendarData) => getNewCalendarAfterTaskSwipe(calendarData, newCurrentCalendarDay, swapCalendarDayId));
+      CalendarStore.dragAndDropHandlerInDay(newCurrentCalendarDay, swapCalendarDayId);
     }
   };
 
@@ -106,21 +83,22 @@ const Content: FC = () => {
 
   return (
     <CellsWrapper id='calendar'>
-      {calendarData.map((calendarDay) => (
-        <CalendarCell
-          calendarDay={calendarDay}
-          addTaskHandler={addTaskHandler}
-          deleteTaskHandler={deleteTaskHandler}
-          editTaskHandler={editTaskHandler}
-          handleDragging={handleDragging}
-          handleDragAndDropUpdate={handleDragAndDropUpdateCalendar}
-          handleSwipeTasksUpdate={handleSwipeTasksUpdateCalendar}
-          isDragging={isDragging}
-          key={calendarDay.id}
-        />
-      ))}
+      {!!calendarData?.total &&
+        calendarData.data?.map((calendarDay) => (
+          <CalendarCell
+            calendarDay={calendarDay}
+            addTaskHandler={addTaskHandler}
+            deleteTaskHandler={deleteTaskHandler}
+            editTaskHandler={editTaskHandler}
+            handleDragging={handleDragging}
+            handleDragAndDropUpdate={handleDragAndDropUpdateCalendar}
+            handleSwipeTasksUpdate={handleSwipeTasksUpdateCalendar}
+            isDragging={isDragging}
+            key={calendarDay.id}
+          />
+        ))}
     </CellsWrapper>
   );
-};
+});
 
 export default Content;

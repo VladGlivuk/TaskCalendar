@@ -4,7 +4,7 @@ type CellProps = { isDragging: boolean };
 
 export const Cell = styled.div<CellProps>`
   display: inline-block;
-  max-width: 250px;
+  max-width: 230px;
   width: 100%;
   height: 320px;
   background-color: #e2e6e9;

@@ -9,6 +9,7 @@ export default defineConfig({
       core: '/src/core',
       shared: '/src/shared',
       components: '/src/components',
+      stores: '/src/stores'
     },
   },
   base: "/TaskCalendar/",

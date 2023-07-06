@@ -1,6 +1,11 @@
 //types
 import { Task } from '.';
 
+export type CalendarData = {
+  data: Array<CalendarDay>;
+  total: number;
+};
+
 export type CalendarDay = {
   date: Date;
   monthDay: number;

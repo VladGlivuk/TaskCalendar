@@ -12,7 +12,10 @@
         "./src/shared/*"
       ],
       "core": [
-        "./src/core/constants/*"
+        "./src/core/*"
+      ],
+      "stores": [
+        "./src/stores/*"
       ]
     },
     "target": "ES2020",
